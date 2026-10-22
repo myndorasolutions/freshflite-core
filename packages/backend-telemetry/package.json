@@ -1,0 +1,28 @@
+{
+  "name": "@freshflite/backend-telemetry",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MQTT binary ingestion, Timescale sink, SLA alerting, and the QI-0412 flight simulator.",
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "prebuild": "npm run build --workspace=@freshflite/shared-schema",
+    "build": "tsc -p tsconfig.json",
+    "preverify": "npm run build --workspace=@freshflite/shared-schema",
+    "verify": "tsx src/verify-sprint3.ts"
+  },
+  "dependencies": {
+    "@freshflite/shared-schema": "*",
+    "aedes": "^0.51.3",
+    "mqtt": "^5.10.3",
+    "pg": "^8.13.1",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "@types/ws": "^8.5.13",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

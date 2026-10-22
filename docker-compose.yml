@@ -1,0 +1,23 @@
+services:
+  emqx:
+    image: emqx/emqx:5.8.0
+    ports:
+      - "1883:1883"
+      - "8083:8083"
+      - "18083:18083"
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: freshflite
+      POSTGRES_PASSWORD: freshflite
+      POSTGRES_DB: freshflite
+    volumes:
+      - ./packages/backend-telemetry/sql/001_init_timescaledb.sql:/docker-entrypoint-initdb.d/001_init_timescaledb.sql
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"

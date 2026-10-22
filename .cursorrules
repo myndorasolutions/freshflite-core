@@ -1,0 +1,40 @@
+# FreshFlite™ Architectural Guardrails (FF-PDD-2026-V1.0)
+
+Myndora Solutions Ltd. Architectural direction: Gemini Aron (CTO).
+
+## 1. Project Context
+
+FreshFlite™ is an aviation-compliant (ICAO Annex 6 / FAA AC 91.21-1D) cold-chain telemetry ecosystem for Ibom Air (CRJ 900 and Airbus A220-300 cargo holds). It transports coastal seafood from Oron/Ibeno aggregation points to UYO, LOS, and ABV.
+
+Edge devices log into SPIFFS and uplink over MQTT. Cloud and edge code share one packed binary contract so a frame written on an ESP32-S3 decodes identically in Node.js, edge runtimes, and browsers.
+
+## 2. Cold Chain SLA
+
+- Acceptable thermal threshold is strictly `-2.00°C` to `+4.00°C`.
+- Stored unit is centi-degrees: `-200` to `400` (`temperature_centi`, 0.01°C resolution).
+- Tamper light breach threshold is `>200 lux` (`tamper_status` `0x01` Lid Breach, `0x03` when combined with shock).
+
+## 3. 17-Byte Packed Binary Telemetry Contract (`FreshFliteRecord`)
+
+All edge-to-cloud MQTT payloads and SPIFFS flash buffers use Little-Endian (`LE`) byte order and are exactly **17 bytes** long:
+
+| Offset | Type | Field | Notes |
+| --- | --- | --- | --- |
+| `0..3` | `uint32_t` | `unix_timestamp` | UTC seconds |
+| `4..5` | `int16_t` | `temperature_centi` | 0.01°C resolution, e.g. `-150` = `-1.50°C` |
+| `6..7` | `uint16_t` | `humidity_centi` | 0.01% RH resolution, e.g. `8520` = `85.20%` |
+| `8` | `uint8_t` | `battery_soc_pct` | `0` to `100` |
+| `9` | `uint8_t` | `tamper_status` | `0x00` OK, `0x01` Lid Breach >200 lux, `0x02` Shock Drop, `0x03` Both |
+| `10` | `uint8_t` | `flight_state` | `0x00` GROUND_PREFLIGHT, `0x01` IN_FLIGHT_SILENT_ICAO, `0x02` POST_TOUCHDOWN_BURST |
+| `11..12` | `int16_t` | `peak_accel_mG` | Peak acceleration in milli-Gs, e.g. `1320` = `1.32g` |
+| `13..16` | `uint32_t` | `checksum_crc32` | IEEE 802.3 CRC32 over the first 13 bytes (`0..12`) |
+
+Never widen, reorder, or endian-swap this frame. Burst dumps are concatenations of 17-byte frames.
+
+## 4. Coding Standards
+
+- TypeScript `strict: true`. Zero `any` types.
+- Binary buffers are deterministic: `DataView` and `Uint8Array` only, so packing is identical in Node.js, edge runtimes, and browsers.
+- Provenance signatures use native Web Crypto or Node `crypto` Ed25519. Do not add a third-party signature library for the pod seal.
+- CRC32 is IEEE 802.3, implemented in pure TypeScript over bytes `0..12`. Do not pull a heavy CRC dependency.
+- Human-readable temperatures and humidities are derived from integer centi fields. The integers are the source of truth.

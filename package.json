@@ -1,0 +1,32 @@
+{
+  "name": "freshflite-core",
+  "private": true,
+  "version": "1.0.0",
+  "description": "FreshFlite™ monorepo (FF-PDD-2026-V1.0) — aviation cold-chain telemetry for Ibom Air.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:schema": "npm run build --workspace=@freshflite/shared-schema",
+    "test:schema": "npm run test --workspace=@freshflite/shared-schema",
+    "verify:sprint1": "npm run test --workspace=@freshflite/shared-schema",
+    "dev:web": "npm run dev --workspace=@freshflite/web-portal",
+    "build:web": "npm run build --workspace=@freshflite/web-portal",
+    "verify:sprint2": "npm run verify --workspace=@freshflite/web-portal",
+    "dev:backend": "npm run dev --workspace=@freshflite/backend-telemetry",
+    "build:backend": "npm run build --workspace=@freshflite/backend-telemetry",
+    "verify:sprint3": "npm run verify --workspace=@freshflite/backend-telemetry",
+    "build:cf": "npm run build:schema && npm run build:web",
+    "deploy:cf": "npm run build:cf && npx wrangler pages deploy packages/web-portal/out --project-name=freshflite",
+    "verify:sprint4": "npm run verify:sprint4 --workspace=@freshflite/web-portal"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

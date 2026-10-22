@@ -1,0 +1,23 @@
+{
+  "name": "@freshflite/shared-schema",
+  "version": "1.0.0",
+  "private": true,
+  "description": "17-byte FreshFliteRecord codec, IEEE CRC32, and Ed25519 FreshTrace seals.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./flight": {
+      "types": "./dist/demo-flight.d.ts",
+      "import": "./dist/demo-flight.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run && tsx src/verify-sprint1.ts"
+  }
+}

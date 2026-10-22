@@ -1,0 +1,35 @@
+{
+  "name": "@freshflite/web-portal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ibom Air dispatch console and FreshTrace buyer certificates.",
+  "scripts": {
+    "dev": "next dev",
+    "prebuild": "npm run build --workspace=@freshflite/shared-schema",
+    "build": "next build",
+    "start": "next start",
+    "verify": "tsx src/verify-sprint2.ts",
+    "verify:sprint4": "tsx src/verify-sprint4.ts"
+  },
+  "dependencies": {
+    "@freshflite/shared-schema": "*",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
+    "next": "^15.2.4",
+    "qrcode.react": "^4.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.15.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
