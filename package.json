@@ -18,7 +18,9 @@
     "verify:sprint3": "npm run verify --workspace=@freshflite/backend-telemetry",
     "build:cf": "npm run build:schema && npm run build:web",
     "deploy:cf": "npm run build:cf && npx wrangler pages deploy packages/web-portal/out --project-name=freshflite",
-    "verify:sprint4": "npm run verify:sprint4 --workspace=@freshflite/web-portal"
+    "verify:sprint4": "npm run verify:sprint4 --workspace=@freshflite/web-portal",
+    "verify:sprint5": "npm run build:schema && tsx packages/firmware-esp32s3/verify-sprint5.ts",
+    "verify:all": "npm run verify:sprint1 && npm run verify:sprint2 && npm run verify:sprint3 && npm run verify:sprint4 && npm run verify:sprint5"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
